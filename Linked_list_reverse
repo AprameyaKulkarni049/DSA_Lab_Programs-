@@ -1,0 +1,153 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+} *head = NULL;
+
+struct node *create(int val)
+{
+    struct node *temp;
+    temp = (struct node*)malloc(sizeof(struct node));
+    temp->data = val;
+    temp->next = NULL;
+    return temp;
+}
+
+void insert_beg(int val)
+{
+    struct node* newnode;
+    newnode = create(val);
+    newnode->next = head;
+    head = newnode;
+}
+
+void insert_end(int val)
+{
+    struct node *newnode;
+    newnode = create(val);
+    struct node* temp = head;
+    
+    if(head == NULL)
+    {
+        insert_beg(val);
+        return; // FIX 1: Must return here!
+    }
+    
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    temp->next = newnode;
+}
+
+int count(struct node *head)
+{
+    int c = 0;
+    struct node *temp = head;
+    while(temp != NULL)
+    {
+        temp = temp->next;
+        c++;
+    }
+    return c;
+}
+
+void insert_pos(int val, int pos)
+{
+    int n = count(head);
+    if(pos < 1 || pos > n + 1)
+    {
+        printf("Invalid position!\n");
+        return;
+    }
+    if(pos == 1)
+    {
+        insert_beg(val);
+        return;
+    }
+    struct node *newnode = create(val);
+    struct node *temp = head;
+    for(int i = 1; i < pos - 1; i++)
+    {
+        temp = temp->next;
+    }
+    newnode->next = temp->next;
+    temp->next = newnode;
+}
+
+void display(struct node *head)
+{
+    struct node *temp = head;
+    if(temp == NULL) {
+        printf("List is Empty\n");
+        return;
+    }
+    while(temp != NULL)
+    {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+struct node *reverse(struct node *head)
+{
+    struct node *curr = head, *prev = NULL, *second = NULL;
+    while(curr != NULL)
+    {
+        second = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = second;
+    }
+    return prev;
+}
+
+int main()
+{
+    int choice, ele, pos;
+    // Removed 'new_head' variable; we will update the global head directly
+    
+    while(1)
+    {
+        printf("\n1.Insert at beginning 2.Insert at end 3.Insert at pos 4.Display 5.Exit 6.Reverse\n");
+        printf("Enter Choice: ");
+        if(scanf("%d", &choice) != 1) break; // Safety check
+
+        switch(choice)
+        {
+            case 1:
+                printf("Enter the element to be inserted: ");
+                scanf("%d", &ele);
+                insert_beg(ele);
+                break;
+            case 2:
+                printf("Enter the element to be inserted: ");
+                scanf("%d", &ele);
+                insert_end(ele);
+                break;
+            case 3:
+                printf("Enter the element to be inserted and position: ");
+                scanf("%d %d", &ele, &pos);
+                insert_pos(ele, pos);
+                break;
+            case 4:
+                display(head);
+                break;
+            case 5:
+                exit(0);
+            case 6:
+                // FIX 2: Update the global head!
+                head = reverse(head);
+                printf("List Reversed.\n");
+                display(head);
+                break;
+            default:
+                printf("Invalid input!!\n");
+        }
+    }
+    return 0;
+}
