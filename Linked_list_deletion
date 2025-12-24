@@ -1,0 +1,69 @@
+void del_beg()
+{
+    struct node *temp=head;
+    if(head==NULL)
+    {
+        printf("The list is empty!!");
+    }
+    else
+    {
+        head=head->next;
+        printf("Deleted node:%d ",temp->data);
+        free(temp);
+    }
+}
+void del_end()
+{
+    struct node *temp1=head,*temp2=NULL;
+    if(head==NULL)
+    {
+        printf("The list is empty!!");
+    }
+    while(temp1!=NULL)
+    {
+        temp2=temp1;
+        temp1=temp1->next;
+    }
+    temp2->next=NULL;
+    printf("Deleted node:%d ",temp1->data);
+    free(temp1);
+}
+int count(struct node *head)
+{
+    int c=0;
+    struct node *temp=head;
+    while(temp!=NULL)
+    {
+        temp=temp->next;
+        c++;
+    }
+    return c;
+}
+void del_pos(int pos)
+{
+    int i=count(head);
+    if(pos<0 || pos>i+1)
+    {
+        printf("Invalid position!\n");
+        return;
+    }
+    else if(pos==1)
+    {
+        del_beg();
+        return;
+    }
+    else
+    {
+        struct node *temp1=head,*temp2=NULL;
+        int n=0;
+        while(n<pos && temp1!=NULL)
+        {
+            temp2=temp1;
+            temp1=temp1->next;
+            n++;
+        }
+        temp2->next=temp1->next;
+        printf("Deleted Node: %d",temp1->data);
+        free(temp1);
+    }
+}
